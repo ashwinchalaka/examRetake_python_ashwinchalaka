@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Dashboard Homepage for User Dashboard Assignment</title>
+    <!----- BOOTSTRAP ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <style>
+        div.body_wrapper {
+            padding: 0px 75px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar" style="padding: 10px auto; border-bottom: 1px solid darkgrey;">
+        <div class="navbar-inner">
+            <nav class="container" style="padding: 0px 20px;">
+            <h3 style="display: inline-block;">{{first_name}} {{last_name}}</h3>
+            <ul class="nav" style="display: inline-block;">
+                <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'go_dashboard' %}">Go Back</a></li>
+                <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'processLogout' %}">Logout</a></li>
+            </ul>
+        </nav>
+        </div>
+    </div>
+
+    <div class='body_wrapper'>
+        <form action="{%url 'updateUser' id=request.session.loggedIn_id%}" method="POST">
+            {% csrf_token %}
+
+            <label for="first_name">First Name:</label>
+            <input type="text" name="first_name" value="{{first_name}}">
+
+            <label for="last_name">Last Name:</label>
+            <input type="text" name="last_name" value="{{last_name}}">
+
+            <label for="email">Email:</label>
+            <input type="text" name="email_address" value="{{email_address}}">
+
+            <input type="submit" value="Update">
+        </form>
+    </div>
+
+</body>
+</html>

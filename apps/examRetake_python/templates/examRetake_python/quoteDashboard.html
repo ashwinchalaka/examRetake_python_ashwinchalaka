@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Dashboard Homepage for User Dashboard Assignment</title>
+    <!----- BOOTSTRAP ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <style>
+        div.body_wrapper {
+            padding: 0px 75px;
+        }
+        div.inner_wrapper {
+            background-image: linear-gradient(#ACBB78,#F7F8F8);
+        }
+        .newQuote_msgs {
+            list-style-type: none;
+            display: inline-block;
+            margin-left: -10px;
+        }
+            .green_message {
+                color: green;
+            }
+            .red_message {
+                color: red;
+            }
+        .quoteWall, .newQuotes {
+            display: inline-block;
+        }
+        .quoteWall {
+            width: 750px;
+            vertical-align: top;
+            padding: 25px;
+            border: 1px solid black;
+        }
+        .newQuotes {
+            vertical-align: top;
+            margin-left: 30px;
+        }
+        .quoteBox {
+            border: 1px solid black;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .buttonOptions {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar" style="padding: 10px auto; border-bottom: 1px solid darkgrey;">
+        <div class="navbar-inner">
+            <nav class="container" style="padding: 0px 20px;">
+            <h3 style="display: inline-block;">{{usr.first_name}} {{usr.last_name}}</h3>
+            <ul class="nav" style="display: inline-block;">
+                <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'showUser' id=request.session.loggedIn_id%}">Profile</a></li>
+                <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'editUser' id=request.session.loggedIn_id%}">Edit My Profile</a></li>
+                <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'processLogout' %}">Logout</a></li>
+            </ul>
+        </nav>
+        </div>
+    </div>
+
+    <div class='body_wrapper'>
+        <h2 class='header'>Welcome to my deployed Quotation Wall!</h2>
+        
+        <div class='inner_wrapper'>
+
+            <div class='quoteWall'>
+                {% for x in qts %}
+                    <div class="quoteBox">
+                        <p>{{x.author}} - {{x.quote_content}}</p>
+                        <br>
+                        <p>Posted by <a href="showUser/{{x.created_by.id}}">{{x.created_by.first_name}} {{x.created_by.last_name}}</a></p>
+                        <p>Likes: {{x.liked_by.count}}</p>
+                        <form class="buttonOptions" action="{%url 'addLike' id=x.id%}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" value="Like">
+                        </form>
+                        {% if x.created_by.id == request.session.loggedIn_id %}
+                            <form class="buttonOptions" action="{%url 'processDeleteQuote' id=x.id%}" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" value="Delete">
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+    
+            <div class='newQuotes'>
+                <h1>Post a new quote</h1>
+                {% if messages %}
+                <ul class="newQuote_msgs">
+                    {% for message in messages %}
+                        {% if message.extra_tags == 'success' %}
+                            <li class='green_message newQuote_msgs'>{{ message }}</li>
+                        {% else %}
+                            <li class='red_message newQuote_msgs'>{{ message }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <br>
+                <form action="{%url 'processNewQuote' %}" method="POST">
+                    {% csrf_token %}
+                    <label for="author">Author:</label>
+                    <input type="text" name="author" style="width: 245px;"><br><br>
+    
+                    <label for="new_quote">Quote:</label>
+                    <input type="text" name="new_quote" style="width: 250px; height:100px;"><br><br>
+    
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
