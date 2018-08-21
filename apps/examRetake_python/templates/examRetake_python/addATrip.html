@@ -14,19 +14,27 @@
         div.body_wrapper {
             padding: 0px 75px;
         }
+        form label, form input {
+            display: block;
+        }
+        /** FLASH MESSAGES *******************************/
+        .form-group ul {
+            list-style-type: none;
+        }
         .green_message {
             color: green;
         }
         .red_message {
             color: red;
         }
+        /*************************************************/
     </style>
 </head>
 <body>
     <div class="navbar" style="padding: 10px auto; border-bottom: 1px solid darkgrey;">
         <div class="navbar-inner">
             <nav class="container" style="padding: 0px 20px;">
-            <h3 style="display: inline-block;">{{usr.first_name}} {{usr.last_name}}</h3>
+            <h3 style="display: inline-block;">{{first_name}} {{last_name}}</h3>
             <ul class="nav" style="display: inline-block;">
                 <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'go_dashboard' %}">Go Back</a></li>
                 <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'processLogout' %}">Logout</a></li>
@@ -36,7 +44,8 @@
     </div>
 
     <div class='body_wrapper'>
-        <h1 style="display: inline-block;">Edit your Account Details:</h1>
+        
+        <h1 style="display: inline-block;">Add a New Trip:</h1>
         {% if messages %}
             <ul style="display: inline-block;">
                 {% for message in messages %}
@@ -47,52 +56,67 @@
             </ul>
         {% endif %}
 
-        <form action="{%url 'processUserUpdate' id=request.session.loggedIn_id%}" method="POST" style="display: block;">
+        <form action="{%url 'processNewTrip' %}" method="POST" style="display: block;">
             {% csrf_token %}
             <div class="form-group">
-                <label for="first_name" style="display: inline-block;">First Name:</label>
+                <label for="destination" style="display: inline-block;">Destination:</label>
                 {% if messages %}
                 <ul style="display: inline-block;">
                     {% for message in messages %}
-                        {% if message.extra_tags == 'first_name' %}
+                        {% if message.extra_tags == 'destination' %}
                             <li class='red_message' style="display: inline-block;">{{ message }}</li>
                         {% endif %}
                     {% endfor %}
                 </ul>
                 {% endif %}
-                <input type="text" class="form-control" name="first_name" value={{usr.first_name}}>
+                <input type="text" class="form-control" name="destination">
             </div>
 
             <div class="form-group">
-                <label for="last_name" style="display: inline-block;">Last Name:</label>
+                <label for="description" style="display: inline-block;">Description:</label>
                 {% if messages %}
                     <ul style="display: inline-block;">
                         {% for message in messages %}
-                            {% if message.extra_tags == 'last_name' %}
+                            {% if message.extra_tags == 'description' %}
                                 <li class='red_message' style="display: inline-block;">{{ message }}</li>
                             {% endif %}
                         {% endfor %}
                     </ul>
                 {% endif %}
-                <input type="text" class="form-control" name="last_name" value={{usr.last_name}}>
+                <input type="text" class="form-control" name="description">
             </div>
             
             <div class="form-group">
-                <label for="email_address" style="display: inline-block;">Email Address:</label>
+                <label for="date_from" style="display: inline-block;">Arrival Date:</label>
                 {% if messages %}
                     <ul style="display: inline-block;">
                         {% for message in messages %}
-                            {% if message.extra_tags == 'email_address' %}
+                            {% if message.extra_tags == 'arrivalDate' %}
                                 <li class='red_message' style="display: inline-block;">{{ message }}</li>
                             {% endif %}
                         {% endfor %}
                     </ul>
                 {% endif %}
-                <input type="text" class="form-control" name="email_address" value={{usr.email_address}}>
+                <input type="date" class="form-control" name="date_from">
+            </div>
+            
+            <div class="form-group">
+                <label for="date_to" style="display: inline-block;">Departure Date:</label>
+                {% if messages %}
+                    <ul style="display: inline-block;">
+                        {% for message in messages %}
+                            {% if message.extra_tags == 'departureDate' %}
+                                <li class='red_message' style="display: inline-block;">{{ message }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <input type="date" class="form-control" name="date_to">
             </div>
 
-            <button type="submit" class="btn btn-default">Update</button>
+            <button type="submit" class="btn btn-default">Add my Trip</button>
         </form>
+
     </div>
 
 </body>

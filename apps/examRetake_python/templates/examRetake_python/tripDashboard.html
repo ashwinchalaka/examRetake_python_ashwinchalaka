@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Dashboard Homepage for User Dashboard Assignment</title>
+    <!----- BOOTSTRAP ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <style>
+        div.body_wrapper {
+            padding: 0px 75px;
+        }
+        div.body_container {
+            padding: 20px 0px;
+            /* background-image: linear-gradient(#ACBB78,#F7F8F8); */
+        }
+        .spacer {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar" style="padding: 10px auto; border-bottom: 1px solid darkgrey;">
+        <div class="navbar-inner">
+            <nav class="container" style="padding: 0px 20px;">
+            <h3 style="display: inline-block;">{{usr.first_name}} {{usr.last_name}}</h3>
+            <ul class="nav" style="display: inline-block;">
+                <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'go_addTrip' %}">Add a New Trip</a></li>
+                <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'go_editUser' id=usr.id%}">Edit My Profile</a></li>
+                <li class="active" style="display: inline-block; font-size: 18px;"><a href="{%url 'processLogout' %}">Logout</a></li>
+            </ul>
+        </nav>
+        </div>
+    </div>
+
+    <div class='body_wrapper'>
+        <h2 class='header'>Welcome to the Trip Dashboard homepage!</h2>
+
+        <div class="body_container">
+
+            <h2>Your Trips</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Travel Start Date</th>
+                    <th scope="col">Travel End Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Action Items</th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in usr_trps %}
+                        <tr>
+                            <th scope="row"><a href="{%url 'go_tripDetails' id=trip.id%}">{{trip.destination}}</a></th>
+                            <td>{{trip.arrivalDate}}</td>
+                            <td>{{trip.departureDate}}</td>
+                            <td>{{trip.description}}</td>
+                            <td>
+                                <a href="{%url 'processCancelTrip' id=trip.id%}" style="display: inline-block;">Cancel</a>
+                                {% if trip.created_by.id == request.session.loggedIn_id %}
+                                    <a href="{%url 'processDeleteTrip' id=trip.id%}" style="display: inline-block;">Delete</a>
+                                {% endif %}
+                                {% if trip.created_by.id == request.session.loggedIn_id %}
+                                    <a href="{%url 'go_editTrip' id=trip.id%}" style="display: inline-block;">Edit</a>
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="spacer"></div>
+
+            <h2>Other Trips You Can Join</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Travel Start Date</th>
+                    <th scope="col">Travel End Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Action Items</th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in notUsr_trps %}
+                        <tr>
+                            <th scope="row"><a href="{%url 'go_tripDetails' id=trip.id%}">{{trip.destination}}</a></th>
+                            <td>{{trip.arrivalDate}}</td>
+                            <td>{{trip.departureDate}}</td>
+                            <td>{{trip.description}}</td>
+                            <td>
+                                <a href="{%url 'processJoinTrip' id=trip.id%}" style="display: inline-block;">Join</a>
+                                {% if trip.created_by.id == request.session.loggedIn_id %}
+                                    <a href="{%url 'processDeleteTrip' id=trip.id%}" style="display: inline-block;">Delete</a>
+                                {% endif %}
+                                {% if trip.created_by.id == request.session.loggedIn_id %}
+                                    <a href="{%url 'go_editTrip' id=trip.id%}" style="display: inline-block;">Edit</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
